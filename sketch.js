@@ -54,12 +54,14 @@ function drawFoish(foish, i) {
     pop();
 }
 
-function drawBigFoish(foish) {
+
+function drawBigFoishSprite(x, y, angleRads)
+{
     push();
     fill('#FFFFFF');
     noStroke();
-    translate(foish.x, foish.y);
-    rotate(foish.angleRadians);
+    translate(x, y);
+    rotate(angleRads);
     // Fins
     fill('#FFFFFF');
     triangle(20, -5, -25, -30, -25, 30);
@@ -82,4 +84,14 @@ function drawBigFoish(foish) {
     triangle(-40, 0, -60, -15, -60, 15);
     triangle(-40, 0, -60, -7, -60, 7);
     pop();
+}
+
+function drawBigFoish(foish) {
+    drawBigFoishSprite(foish.x, foish.y, foish.angleRadians);
+    // Extra ones drawn so the fish I mean foish smoothly travels 
+    // across the edges of the canvas.
+    drawBigFoishSprite(foish.x + width, foish.y, foish.angleRadians);
+    drawBigFoishSprite(foish.x - width, foish.y, foish.angleRadians);
+    drawBigFoishSprite(foish.x, foish.y + height, foish.angleRadians);
+    drawBigFoishSprite(foish.x, foish.y - height, foish.angleRadians);
 }
