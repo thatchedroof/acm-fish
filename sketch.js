@@ -1,9 +1,13 @@
 let tank;
+let lastMouseX = 0;
+let lastMouseY = 0;
 
 function setup() {
-    createCanvas(400, 400);
+    const w = 400;
+    const h = 400;
+    createCanvas(w, h);
 
-    tank = new FoishTank(100, 400, 400);
+    tank = new FoishTank(100, w, h);
 }
 
 function draw() {
@@ -22,6 +26,27 @@ function draw() {
     //     tank.bigFoish.y + tank.bigFoish.vY * 5,
     // );
 
+    if (
+        // mouseIsPressed &&
+        mouseX > 0 &&
+        mouseX < width &&
+        mouseY > 0 &&
+        mouseY < height
+    ) {
+        const damp = 5;
+        tank.bigFoish.x = (tank.bigFoish.x * 5 + mouseX) / (damp + 1);
+        tank.bigFoish.y = (tank.bigFoish.y * 5 + mouseY) / (damp + 1);
+        if (lastMouseX !== mouseX && lastMouseY !== mouseY) {
+            tank.bigFoish.vX =
+                (tank.bigFoish.vX * 10 + mouseX - lastMouseX) / 11;
+            tank.bigFoish.vY =
+                (tank.bigFoish.vY * 10 + mouseY - lastMouseY) / 11;
+        }
+    }
+
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+
     drawBigFoish(tank.bigFoish);
 
     tank.step();
@@ -29,9 +54,6 @@ function draw() {
 
 function drawFoish(foish, i) {
     push();
-    // console.log(
-    //     `hsl(${Math.round(i / tank.foishes.length) * 30 + 240}, 53%, 70%)`,
-    // );
     const c = color(
         `hsl(${Math.round((i / tank.foishes.length) * 100 + 100)}, 53%, 70%)`,
     );
@@ -39,7 +61,6 @@ function drawFoish(foish, i) {
     noStroke();
     translate(foish.x, foish.y);
     rotate(foish.angleRadians);
-    //console.log(foish.velocity);
     // Body
     ellipse(0, 0, foish.velocity * 2.5, 12 - foish.velocity);
     // Tail
@@ -54,9 +75,7 @@ function drawFoish(foish, i) {
     pop();
 }
 
-
-function drawBigFoishSprite(x, y, angleRads)
-{
+function drawBigFoishSprite(x, y, angleRads) {
     push();
     fill('#FFFFFF');
     noStroke();
@@ -88,7 +107,7 @@ function drawBigFoishSprite(x, y, angleRads)
 
 function drawBigFoish(foish) {
     drawBigFoishSprite(foish.x, foish.y, foish.angleRadians);
-    // Extra ones drawn so the fish I mean foish smoothly travels 
+    // Extra ones drawn so the fish I mean foish smoothly travels
     // across the edges of the canvas.
     drawBigFoishSprite(foish.x + width, foish.y, foish.angleRadians);
     drawBigFoishSprite(foish.x - width, foish.y, foish.angleRadians);
